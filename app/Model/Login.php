@@ -10,14 +10,14 @@ class Login extends Authenticatable
 {
     
     use HasApiTokens, Notifiable;
-
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'v_email', 'v_phone', 'password',
     ];
 
     /**

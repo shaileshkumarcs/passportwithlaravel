@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateLoginsTable extends Migration
 {
+    public $timestamps = false;
     /**
      * Run the migrations.
      *
@@ -13,14 +14,14 @@ class CreateLoginsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logins', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        // Schema::create('logins', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->string('password');
+        //     $table->rememberToken();
+        //     $table->timestamps();
+        // });
     }
 
     /**

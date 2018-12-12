@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\API;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller; 
-//use App\User; 
+use App\User; 
 use App\Model\Login;
 use Illuminate\Support\Facades\Auth; 
 use Validator;
@@ -18,7 +18,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response 
      */ 
     public function login(){ 
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
+        if(Auth::attempt(['v_email' => request('v_email'), 'password' => request('password')])){ 
             $user = Auth::user(); 
 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
@@ -36,8 +36,9 @@ class UserController extends Controller
     public function register(Request $request) 
     { 
         $validator = Validator::make($request->all(), [ 
-            'name' => 'required', 
-            'email' => 'required|email', 
+            'v_first_name' => 'required', 
+            'v_last_name' => 'required', 
+            'v_email' => 'required|email', 
             'password' => 'required', 
             'c_password' => 'required|same:password', 
         ]);
@@ -46,9 +47,26 @@ class UserController extends Controller
         }
 		$input = $request->all(); 
         $input['password'] = bcrypt($input['password']); 
+
+        //print_r($input);
+
         $user = Login::create($input); 
+
+
+        $users  = new User();
+        $users['login_id'] = $user->id;
+        $users['v_first_name'] = $input['v_first_name'];
+        $users['v_last_name'] = $input['v_last_name'];
+        $users['v_email'] = $input['v_email'];
+        $users['v_phone'] = $input['v_phone'];
+        $users->save();
+
+
+
+
+
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-        $success['name'] =  $user->name;
+        $success['v_first_name'] =  $user->v_email;
 		return response()->json(['success'=>$success], $this-> successStatus); 
     }
 	/** 
@@ -59,6 +77,10 @@ class UserController extends Controller
     public function details() 
     { 
         $user = Auth::user(); 
-        return response()->json(['success' => $user], $this-> successStatus); 
+
+        print_r(json_encode($user));
+
+
+        //return response()->json(['success' => $user], $this-> successStatus); 
     } 
 }
