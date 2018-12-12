@@ -78,6 +78,9 @@ class UserController extends Controller
 	        $input = $request->all(); 
 	        unset($input->v_email);
         }
+        else{
+        	return response()->json(['error'=> "Please enter data"], 401);
+        }
 
 
 
