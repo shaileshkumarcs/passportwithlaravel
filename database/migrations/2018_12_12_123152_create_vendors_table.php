@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateVendorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('vendors', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('login_id')->unsigned()->unique();
             $table->string('v_first_name');
@@ -26,6 +26,8 @@ class CreateUsersTable extends Migration
             $table->string('v_city')->nullable();
             $table->string('v_state')->nullable();
             $table->string('v_country')->nullable();
+            $table->string('v_pincode')->nullable();
+            $table->string('v_business_name')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
@@ -36,15 +38,7 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('logins', function (Blueprint $table) {
-            $table->increments('id', true);
-            $table->string('v_email')->unique()->nullable();
-            $table->string('v_phone')->unique()->nullable();
-            $table->string('password');
-            $table->rememberToken();
-        });
-
-        Schema::table('users', function($table) {
+        Schema::table('vendors', function($table) {
             $table->foreign('login_id')->references('id')->on('logins')->onUpdate('cascade');
         });
     }
@@ -56,6 +50,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('vendors');
     }
 }
