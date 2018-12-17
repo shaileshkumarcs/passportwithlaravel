@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller; 
 use App\User; 
@@ -20,7 +20,9 @@ class UserController extends Controller
      * 
      * @return \Illuminate\Http\Response 
      */ 
+
     public function login(){ 
+        
     	if(request('v_email')){
     		if(Auth::attempt(['v_email' => request('v_email'), 'password' => request('password')])){ 
 	            $user = Auth::user(); 

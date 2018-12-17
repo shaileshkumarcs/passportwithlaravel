@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Auth;
+use DB;
+use App\Model\Admin;
 use Closure;
 
 class AdminAuthenticator
@@ -16,8 +19,20 @@ class AdminAuthenticator
     public function handle($request, Closure $next)
     {
 
-        print_r(($request->all()));
-//        echo "HI";
-        return $next($request);
+        $user = Auth::user();
+        
+        $is_admin = DB::table('admins')
+                    ->where('login_id', $user->id)
+                    ->count();
+                    
+        if($is_admin){
+           
+            return $next($request);
+        }
+        else{
+           
+            return response()->json(['responseCode' => 1001, 'responseMessage'=> "You are not authorized", 'data' => ''], 401 );
+        }
+        
     }
 }

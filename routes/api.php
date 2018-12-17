@@ -17,14 +17,15 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-
-
+// Common API
 Route::group(['prefix' => 'v1'], function(){
 	Route::post('login', 'API\UserController@login');
 	Route::post('register', 'API\UserController@register');
 });
 
+// With Auth
 Route::group(['prefix' => 'v1','middleware' => 'auth:api'], function(){
+
 	Route::get('details', 'API\UserController@details');
 	Route::get('users', 'API\UserController@users');
 
@@ -32,8 +33,16 @@ Route::group(['prefix' => 'v1','middleware' => 'auth:api'], function(){
 	Route::put('vendors/{id}','API\VendorController@update');
 });
 
-
 Route::group(['prefix' => 'v1','middleware' => ['auth:api', 'adminauth']], function(){
 
-	Route::get('vendors','API\VendorController@index');
+	//Route::get('vendors','API\VendorController@index'); FOR TESTING MIDDLEWARE
+
+	Route::get('admin/vendors', 'API\AdminController@vendors');
+
+	// Route::resource('admin','API\AdminController'); //->except('create','update','destroy');
+	
+	Route::resource('user','API\UserController'); //->except('create','update','destroy');
+	
+	Route::resource('vendor','API\VendorController'); //->except('create','update','destroy');
+
 });
