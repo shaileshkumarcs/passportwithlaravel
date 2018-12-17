@@ -27,7 +27,8 @@ class UserController extends Controller
 
 	            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
 
-	            return response()->json(['success' => $success], $this-> successStatus); 
+                return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'Token'=> $success], $this-> successStatus);
+	           // return response()->json(['success' => $success], $this-> successStatus); 
 	        }
     	}
         else if(request('v_phone')){
@@ -36,12 +37,16 @@ class UserController extends Controller
 
 	            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
 	            
-	            return response()->json(['success' => $success], $this-> successStatus); 
+	            //return response()->json(['success' => $success], $this-> successStatus); 
+
+                return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'Token'=> $success], $this-> successStatus);
 	        } 
 	        
         }
         else{ 
-	        return response()->json(['error'=>'Unauthorised'], 401); 
+	        //return response()->json(['error'=>'Unauthorised'], 401); 
+
+            return response()->json(['responseCode'=>100,'responseMessage' => "Unauthorised", 'Token'=> ''], 401);
 	    } 
         
     }
@@ -52,8 +57,8 @@ class UserController extends Controller
      */ 
     public function register(Request $request) 
     { 
+    	//Check if Email is available then only get inside
         if($request->input('v_email')){
-
         	$rules = [
         		'v_first_name' => 'required', 
 	            'v_last_name' => 'required', 
@@ -67,6 +72,7 @@ class UserController extends Controller
 	        $input = $request->all(); 
 	        unset($input->v_phone);
         }
+        //Check if Phone is available then only get inside
         else if($request->input('v_phone')){
         	$validator = Validator::make($request->all(), [ 
 	            'v_first_name' => 'required', 
@@ -81,7 +87,8 @@ class UserController extends Controller
 	        unset($input->v_email);
         }
         else{
-        	return response()->json(['error'=> "Please enter data"], 401);
+        	
+        	return response()->json(['responseCode'=>100,'responseMessage' => "Please enter data", 'data'=> ''], 401);
         }
 
         /**
@@ -108,6 +115,7 @@ class UserController extends Controller
 	        $users['login_id'] = $user->id;
 	        $users['v_first_name'] = $input['v_first_name'];
 	        $users['v_last_name'] = $input['v_last_name'];
+            $users['created_by'] = $user->id;
 	        if(isset($input['v_email'])){
 	        	$users['v_email'] = $input['v_email'];
 	        }
@@ -118,7 +126,7 @@ class UserController extends Controller
 	        
 	        $users->save();
 
-	        return response()->json(['success'=> "You are succesfully register"],$this-> successStatus);
+	        return response()->json(['responseCode' => 200, 'responseMessage'=> "You are succesfully register", 'data' => ''],$this-> successStatus);
         }
         else if($request->input('user_type') == 'User'){
 
@@ -128,6 +136,7 @@ class UserController extends Controller
 	        $users['login_id'] = $user->id;
 	        $users['v_first_name'] = $input['v_first_name'];
 	        $users['v_last_name'] = $input['v_last_name'];
+            $users['created_by'] = $user->id;
 	        if(isset($input['v_email'])){
 	        	$users['v_email'] = $input['v_email'];
 	        }
@@ -136,7 +145,7 @@ class UserController extends Controller
 	        }
 	        $users->save();
 
-	        return response()->json(['success'=> "You are succesfully register"],$this-> successStatus);
+	        return response()->json(['responseCode' => 200, 'responseMessage'=> "You are succesfully register", 'data' => ''],$this-> successStatus);
         }
         else if($request->input('user_type') == 'Admin'){
 
@@ -146,6 +155,7 @@ class UserController extends Controller
 	        $users['login_id'] = $user->id;
 	        $users['v_first_name'] = $input['v_first_name'];
 	        $users['v_last_name'] = $input['v_last_name'];
+            $users['created_by'] = $user->id;
 	        if(isset($input['v_email'])){
 	        	$users['v_email'] = $input['v_email'];
 	        }
@@ -154,11 +164,12 @@ class UserController extends Controller
 	        }
 	        $users->save();
 
-	        return response()->json(['success'=> "You are succesfully register"],$this-> successStatus);
+	        return response()->json(['responseCode' => 200, 'responseMessage'=> "You are succesfully register", 'data' => ''],$this-> successStatus);
         }
 
         else{
-        	return response()->json(['success'=> "Please provide user type"],$this-> successStatus);
+        	return response()->json(['responseCode' => 200, 'responseMessage'=> "Please provide user type", 'data' => ''],402);
+
         }
         // $success['token'] =  $user->createToken('MyApp')-> accessToken; 
         // $success['v_first_name'] =  $user->v_email;
@@ -176,12 +187,16 @@ class UserController extends Controller
 
         $user_details = User::find($user->id);
 
-        //$user->details = $user_details;
+        $user->details = $user_details;
 
-        return response()->json(['success' => $user], $this-> successStatus); 
+        //return response()->json(['success' => $user], $this-> successStatus);
+
+        return response()->json(['responseCode' => 200, 'responseMessage'=> "Success", 'data' => $user],$this-> successStatus);
+
+
     } 
 
-    public function allusrers(){
+    public function users(){
 
 #    	$allusers = Login::all();
 
@@ -214,6 +229,8 @@ class UserController extends Controller
     	// }
 
     	//print_r(json_encode($allusers));
-    	return response()->json(['success' => $allusers], $this-> successStatus); 	
+    	//return response()->json(['success' => $allusers], $this-> successStatus); 	
+
+        return response()->json(['responseCode' => 200, 'responseMessage'=> "Success", 'data' =>  $allusers],$this-> successStatus);
     }
 }
