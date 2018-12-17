@@ -15,6 +15,80 @@ use DB;
 class UserController extends Controller
 {
     public $successStatus = 200;
+
+    /** 
+     * List of user list api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function index(){
+
+        $users = User::all();
+
+        if($users){
+            return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'data'=> $users], $this-> successStatus);
+        }
+        else{
+            return response()->json(['responseCode'=>100,'responseMessage' => "Failed", 'data'=> ''], 401);
+        }
+
+    }
+
+    /** 
+     * Profile View api
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+
+
+    public function show($id){
+
+        $user = User::find($id);
+
+        if($user){
+            return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'data'=> $user], $this-> successStatus);
+        }
+        else{
+            return response()->json(['responseCode'=>100,'responseMessage' => "Failed", 'data'=> ''], 401);
+        }
+
+    }
+
+    /** 
+     * Profile update api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+
+    public function update(Request $request, $id){
+
+        $user = User::find($id);
+
+        if($user){
+
+            $user = new User();
+
+            $data = $request->all();
+
+            $update = DB::table('users')
+                        ->where('id', $id)
+                        ->update($data);
+
+
+            if($update){
+                return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'data'=> $data], $this-> successStatus);
+            }
+            else{
+                return response()->json(['responseCode'=>100,'responseMessage' => "Failed", 'data'=> ''], 401);
+            }
+        }
+        else{
+            return response()->json(['responseCode'=>100,'responseMessage' => "Failed", 'data'=> ''], 401);
+        }
+    
+    }
+
+
 	/** 
      * login api 
      * 
@@ -22,7 +96,7 @@ class UserController extends Controller
      */ 
 
     public function login(){ 
-        
+
     	if(request('v_email')){
     		if(Auth::attempt(['v_email' => request('v_email'), 'password' => request('password')])){ 
 	            $user = Auth::user(); 

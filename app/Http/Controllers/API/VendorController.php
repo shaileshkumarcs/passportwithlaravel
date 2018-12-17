@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 
 class VendorController extends Controller
 {
+    public $successStatus = 200;
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,14 @@ class VendorController extends Controller
      */
     public function index()
     {
-        echo "TEST";   
+        $vendors = Vendor::all();
+
+        if($vendors){
+            return response()->json(['responseCode'=>100,'responseMessage' => "Success", 'data'=> $vendors], $this-> successStatus);
+        }
+        else{
+            return response()->json(['responseCode'=>100,'responseMessage' => "Failed", 'data'=> ''], 401);
+        } 
     }
 
     /**
@@ -97,9 +106,15 @@ class VendorController extends Controller
             //     $updatedate['v_image_url'] = $name;
             // }
 
-            Vendor::where('id',$id)->update($updatedate);
+            $update = Vendor::where('id',$id)->update($updatedate);
 
-            return response()->json(['responseCode' => 200, 'responseMessage'=> "Success", 'data' => $vendor], 200 );
+            if($update){
+                return response()->json(['responseCode' => 200, 'responseMessage'=> "Success", 'data' => $vendor], 200 );
+            }
+            else{
+                return response()->json(['responseCode' => 1001, 'responseMessage'=> "Failed", 'data' => $vendor], 200 );
+            }
+            
         }
         else{
             return response()->json(['responseCode' => 1001, 'responseMessage'=> "Failed", 'data' => $vendor], 200 );

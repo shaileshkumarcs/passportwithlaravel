@@ -58,7 +58,10 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
 
+        // Custom middleware
         'adminauth' => \App\Http\Middleware\AdminAuthenticator::class,
+        'userauth' => \App\Http\Middleware\UserAuthenticator::class,
+        'vendorauth' => \App\Http\Middleware\VendorAuthenticator::class,
 
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
